@@ -1,0 +1,61 @@
+RAGDemo — 本地向量化与检索演示
+[TokenizerBridge] Loaded tokenizer from: ./models/all-MiniLM-L6-v2\tokenizer.json
+ONNX model loaded. Input metadata:
+ - input_ids: System.Int64 -1x-1
+ - attention_mask: System.Int64 -1x-1
+ - token_type_ids: System.Int64 -1x-1
+Using model path: ./models/all-MiniLM-L6-v2\model.onnx
+输入 'help' 查看可用命令。
+
+rag> help
+可用命令:
+  import <dir>         — 从目录导入并索引所有支持的文档（txt, md, html, pdf, docx, xlsx）。
+  index <file>         — 对单个文件解析并索引（支持同上扩展名）。
+  query <text>         — 对查询文本向量化并检索 top-K 文档。返回 id, score, metadata。
+  save <path>          — 将当前索引保存到磁盘（默认 ./index.json）。
+  load <path>          — 从磁盘加载索引（默认 ./index.json）。
+  help                 — 显示此帮助。
+  exit | quit          — 退出程序。
+
+索引说明:
+  文档会被分块（chunk），默认 chunk size= 800, overlap= 200。
+  每个 chunk 会单独向量化并存为 id: <filename>#chunk-i，metadata 为原始文件路径。
+rag> load
+Index loaded from ./index.json
+rag> query 劳斯莱斯
+[TokenizerBridge] Loaded tokenizer from: ./models/all-MiniLM-L6-v2\tokenizer.json
+Top results:
+Result #1 — id=新建 文本文档 (2).txt#chunk-0 score=0.8838
+  source: C:\Users\BSI\Desktop\doc\新建 文本文档 (2).txt
+  chunk: 0
+  snippet:
+劳斯莱斯是英国的豪华汽车品牌，经常被用来比喻极致的品质。
+Result #2 — id=新建 文本文档 (3).txt#chunk-0 score=0.8770
+  source: C:\Users\BSI\Desktop\doc\新建 文本文档 (3).txt
+  chunk: 0
+  snippet:
+科目, 科目余额, 科目是什么, 啊啊啊啊科目
+Result #3 — id=chinese_notes.txt#chunk-0 score=0.7866
+  source: C:\Users\BSI\Desktop\doc\chinese_notes.txt
+  chunk: 0
+  snippet:
+记账 报表 这是一些测试文本，用于验证记账查询是否能够匹配。 账目分类：资产、负债、收入、费用。 记账原则：借贷平衡，分录清晰。
+rag> query 记账
+[TokenizerBridge] Loaded tokenizer from: ./models/all-MiniLM-L6-v2\tokenizer.json
+Top results:
+Result #1 — id=chinese_notes.txt#chunk-0 score=0.7685
+  source: C:\Users\BSI\Desktop\doc\chinese_notes.txt
+  chunk: 0
+  snippet:
+记账 报表 这是一些测试文本，用于验证记账查询是否能够匹配。 账目分类：资产、负债、收入、费用。 记账原则：借贷平衡，分录清晰。
+Result #2 — id=新建 文本文档 (2).txt#chunk-0 score=0.8682
+  source: C:\Users\BSI\Desktop\doc\新建 文本文档 (2).txt
+  chunk: 0
+  snippet:
+劳斯莱斯是英国的豪华汽车品牌，经常被用来比喻极致的品质。
+Result #3 — id=新建 文本文档 (3).txt#chunk-0 score=0.8618
+  source: C:\Users\BSI\Desktop\doc\新建 文本文档 (3).txt
+  chunk: 0
+  snippet:
+科目, 科目余额, 科目是什么, 啊啊啊啊科目
+rag>
